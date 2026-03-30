@@ -3,130 +3,1056 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>傩舞非遗文化 - 留言反馈</title>
-    <!-- 引入Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>傩舞非遗面具 - 千年傩韵 面具传魂</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "微软雅黑", sans-serif;
+            font-family: "思源宋体", "Microsoft YaHei", serif;
         }
+
+        :root {
+            /* 椰壳棕非遗核心配色（完全匹配原页面色卡） */
+            --coconut-main: #883A24;    /* 主椰壳棕（页面核心背景色） */
+            --coconut-deep: #5C2818;    /* 深椰壳棕（按钮、边框、深色块） */
+            --coconut-dark: #3D1A10;    /* 超深椰壳棕（最深背景、替代纯黑） */
+            --coconut-light: #A05236;   /* 浅椰壳棕（hover、装饰线条） */
+            --warm-sand-gold: #E6C088;  /* 暖沙金（标题、高光、重点文字） */
+            --soft-cream: #F8F0E3;      /* 柔米白（正文文字，护眼不刺眼） */
+            --deep-brown-bg: #2D140B;   /* 深棕黑（导航栏半透明背景） */
+            --brown-gradient: #6B3520;  /* 棕褐色（背景渐变收尾色） */
+        }
+
         body {
-            background-color: #f5f5f5;
-            padding: 40px 20px;
+            background-color: var(--coconut-main);
+            color: var(--soft-cream);
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+
+        /* ------------ 开场进入页（完全保留未修改） ------------ */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url("img/splash-bg.jpg") center/cover no-repeat;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, transform 1s ease;
         }
-        h1 {
+
+        #splash-screen::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(61, 26, 16, 0.7); /* 椰壳棕半透明遮罩，替代原黑色 */
+        }
+
+        .splash-content {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
         }
-        .form-group {
-            margin-bottom: 20px;
+
+        .splash-title {
+            font-size: 4rem;
+            color: var(--warm-sand-gold);
+            text-shadow: 0 0 20px var(--coconut-dark);
+            margin-bottom: 1rem;
+            letter-spacing: 0.5rem;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
+
+        .splash-subtitle {
+            font-size: 1.2rem;
+            color: var(--soft-cream);
+            margin-bottom: 3rem;
+            letter-spacing: 0.2rem;
         }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 500;
+
+        .enter-btn {
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, var(--coconut-deep), var(--coconut-dark));
+            border: 2px solid var(--warm-sand-gold);
+            color: var(--warm-sand-gold);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3rem;
         }
-        .btn:hover {
-            background: #3b82f6;
+
+        .enter-btn:hover {
+            background: var(--warm-sand-gold);
+            color: var(--coconut-dark);
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(230, 192, 136, 0.6);
         }
-        .tip {
+
+        /* ------------ 主页面布局 ------------ */
+        #main-page {
+            display: none;
+            min-height: 100vh;
+            /* 椰壳棕渐变背景，替代原黑棕渐变 */
+            background: linear-gradient(180deg, var(--coconut-dark) 0%, var(--coconut-main) 50%, var(--brown-gradient) 100%);
+            padding-bottom: 4rem;
+        }
+
+        /* 导航栏（新增2个板块导航项） */
+        header {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(230, 192, 136, 0.3);
+            background: rgba(45, 20, 11, 0.9); /* 深椰壳棕半透明，替代原黑色 */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            color: var(--warm-sand-gold);
+            font-weight: bold;
+            letter-spacing: 0.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--soft-cream);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--warm-sand-gold);
+        }
+
+        /* 文化介绍区（完全保留未修改） */
+        .intro-section {
+            padding: 4rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
             text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
+        }
+
+        .intro-title {
+            font-size: 2.5rem;
+            color: var(--warm-sand-gold);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--soft-cream);
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* 面具网格展示区（完全保留未修改） */
+        .mask-grid-section {
+            padding: 0 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .grid-title {
+            font-size: 2rem;
+            color: var(--warm-sand-gold);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 0.2rem;
+        }
+
+        .mask-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 面具卡片 - 椰壳棕背景，替代原全黑（完全保留未修改） */
+        .mask-card {
+            background: rgba(92, 40, 24, 0.6); /* 深椰壳棕半透明 */
+            border: 1px solid rgba(230, 192, 136, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .mask-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--warm-sand-gold);
+            box-shadow: 0 10px 30px rgba(61, 26, 16, 0.7); /* 椰壳棕阴影，替代原红色 */
+        }
+
+        .mask-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--coconut-light); /* 浅椰壳棕，替代原红色 */
+        }
+
+        .mask-name {
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--warm-sand-gold);
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+        }
+
+        /* ------------ 新增板块通用样式 ------------ */
+        .section-title {
+            font-size: 2rem;
+            color: var(--warm-sand-gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: 0.2rem;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--soft-cream);
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        /* ------------ 新增：傩舞服饰板块样式 ------------ */
+        .costume-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .costume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .costume-card {
+            background: rgba(92, 40, 24, 0.6);
+            border: 1px solid rgba(230, 192, 136, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .costume-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--warm-sand-gold);
+            box-shadow: 0 10px 30px rgba(61, 26, 16, 0.7);
+        }
+
+        .costume-img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--coconut-light);
+        }
+
+        .costume-name {
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--warm-sand-gold);
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+        }
+
+        .costume-tag {
+            padding: 0 1rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--soft-cream);
+            opacity: 0.8;
+        }
+
+        /* ------------ 新增：传承人档案板块样式 ------------ */
+        .inheritor-section {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .inheritor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .inheritor-card {
+            background: rgba(92, 40, 24, 0.6);
+            border: 1px solid rgba(230, 192, 136, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inheritor-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--warm-sand-gold);
+            box-shadow: 0 10px 30px rgba(61, 26, 16, 0.7);
+        }
+
+        .inheritor-avatar {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--coconut-light);
+        }
+
+        .inheritor-info {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .inheritor-name {
+            font-size: 1.4rem;
+            color: var(--warm-sand-gold);
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+        }
+
+        .inheritor-level {
+            font-size: 0.95rem;
+            color: var(--warm-sand-gold);
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .inheritor-area {
+            font-size: 0.9rem;
+            color: var(--soft-cream);
+            opacity: 0.8;
+        }
+
+        .inheritor-brief {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--soft-cream);
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* ------------ 面具详情模态框（完全保留未修改） ------------ */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(45, 20, 11, 0.85); /* 深椰壳棕遮罩，替代原纯黑 */
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            /* 椰壳棕渐变背景，替代原黑棕渐变 */
+            background: linear-gradient(135deg, var(--coconut-deep), var(--coconut-main));
+            border: 2px solid var(--warm-sand-gold);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalShow 0.4s ease;
+        }
+
+        @keyframes modalShow {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--coconut-deep); /* 深椰壳棕，替代原红色 */
+            border: 1px solid var(--warm-sand-gold);
+            color: var(--soft-cream);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            background: var(--warm-sand-gold);
+            color: var(--coconut-dark);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .modal-img-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-mask-img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 12px;
+            border: 2px solid var(--warm-sand-gold);
+        }
+
+        .modal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--warm-sand-gold);
+            letter-spacing: 0.2rem;
+            border-bottom: 2px solid var(--coconut-light); /* 浅椰壳棕，替代原红色 */
+            padding-bottom: 0.5rem;
+        }
+
+        .modal-desc {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--soft-cream);
+            opacity: 0.95;
+        }
+
+        .modal-feature {
+            background: rgba(61, 26, 16, 0.4); /* 深椰壳棕半透明，替代原红色 */
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--warm-sand-gold);
+        }
+
+        .feature-title {
+            color: var(--warm-sand-gold);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 页脚（完全保留未修改） */
+        footer {
+            text-align: center;
+            padding: 2rem 5%;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(230, 192, 136, 0.3);
+            color: rgba(248, 240, 227, 0.7);
+        }
+
+        /* ------------ 响应式适配（新增板块同步适配） ------------ */
+        @media (max-width: 768px) {
+            .splash-title {
+                font-size: 2.5rem;
+                letter-spacing: 0.2rem;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .mask-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .mask-img {
+                height: 180px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            /* 新增板块响应式适配 */
+            .costume-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+            .costume-img {
+                height: 200px;
+            }
+            .inheritor-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+            .inheritor-avatar {
+                height: 180px;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .section-desc {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>傩舞非遗文化 留言反馈</h1>
-        <form id="feedbackForm">
-            <div class="form-group">
-                <label for="user_name">你的昵称</label>
-                <input type="text" id="user_name" name="user_name" placeholder="请输入你的昵称" required>
+    <!-- 开场进入页（完全保留未修改） -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <h1 class="splash-title">千年傩韵</h1>
+            <p class="splash-subtitle">中国非物质文化遗产 · 傩舞面具</p>
+            <button class="enter-btn" id="enterBtn">进入傩舞世界</button>
+        </div>
+    </div>
+
+    <!-- 主页面 -->
+    <div id="main-page">
+        <!-- 导航栏（新增2个板块导航） -->
+        <header>
+            <div class="logo">傩舞文化</div>
+            <div class="nav-links">
+                <a href="#intro">文化介绍</a>
+                <a href="#mask-grid">面具图鉴</a>
+                <a href="#costume">傩舞服饰</a>
+                <a href="#inheritor">传承人档案</a>
+                <a href="#feedback">留言反馈</a>
             </div>
-            <div class="form-group">
-                <label for="contact">联系方式（选填）</label>
-                <input type="text" id="contact" name="contact" placeholder="微信/邮箱，方便后续回访">
+        </header>
+
+        <!-- 文化介绍（完全保留未修改） -->
+        <section class="intro-section" id="intro">
+            <h2 class="intro-title">傩舞 · 千年非遗的活态传承</h2>
+            <p class="intro-text">
+                傩舞，起源于远古的祭祀仪式，是中国最古老的民俗文化之一，被列入国家级非物质文化遗产名录。
+                傩面具是傩文化的核心载体，每一张面具都承载着独特的文化寓意与民俗信仰，
+                既是驱邪纳福的神圣符号，也是中国民间雕刻艺术的巅峰之作。
+                从驱鬼镇宅的将军，到公正不阿的清官，每一张面具背后，都是一段流传千年的文化故事。
+            </p>
+        </section>
+
+        <!-- 面具网格展示（完全保留未修改） -->
+        <section class="mask-grid-section" id="mask-grid">
+            <h2 class="grid-title">傩面具图鉴</h2>
+            <div class="mask-grid" id="maskGrid">
+                <!-- 面具卡片会通过JS动态生成 -->
             </div>
-            <div class="form-group">
-                <label for="feedback_content">你的反馈/观后感</label>
-                <textarea id="feedback_content" name="feedback_content" placeholder="聊聊你对傩舞的看法、建议、观后感..." required></textarea>
+        </section>
+
+        <!-- 新增：傩舞服饰板块 -->
+        <section class="costume-section" id="costume">
+            <h2 class="section-title">傩舞服饰</h2>
+            <p class="section-desc">
+                傩舞服饰是傩文化不可或缺的核心组成部分，与傩面具相辅相成，承载着民俗信仰与审美意趣。
+                不同地域、不同角色的傩服各具特色，从武将的铠甲蟒袍到文臣的官服朝靴，从民俗角色的彩衣绣裙到神兽的图腾披挂，
+                一针一线皆藏着千年的文化密码，是非遗技艺中珍贵的织绣艺术遗存。
+            </p>
+            <div class="costume-grid" id="costumeGrid">
+                <!-- 服饰卡片通过JS动态生成 -->
             </div>
-            <button type="submit" class="btn">提交反馈</button>
-        </form>
-        <p class="tip">提交成功后，数据会实时同步到后台</p>
+        </section>
+
+        <!-- 新增：传承人记录档案库板块 -->
+        <section class="inheritor-section" id="inheritor">
+            <h2 class="section-title">非遗传承人档案库</h2>
+            <p class="section-desc">
+                傩文化的千年传承，离不开一代代非遗传承人的坚守与匠心。他们深耕于民间，守护着傩舞、傩面具雕刻、傩戏表演的古老技艺，
+                让濒临失传的非遗文化重焕生机。这里记录着傩文化非遗传承人的事迹与成就，致敬每一位文化守艺人。
+            </p>
+            <div class="inheritor-grid" id="inheritorGrid">
+                <!-- 传承人卡片通过JS动态生成 -->
+            </div>
+        </section>
+
+        <!-- 页脚（完全保留未修改） -->
+        <footer>
+            <p>© 2024 傩舞非遗文化传承 | 中国非物质文化遗产保护项目</p>
+        </footer>
+    </div>
+
+    <!-- 面具详情模态框（完全保留未修改） -->
+    <div class="modal-mask" id="maskModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">×</button>
+            <div class="modal-body" id="modalBody">
+                <!-- 详情内容通过JS动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增：傩舞服饰详情模态框 -->
+    <div class="modal-mask" id="costumeModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeCostumeModal">×</button>
+            <div class="modal-body" id="costumeModalBody">
+                <!-- 服饰详情内容通过JS动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增：传承人详情模态框 -->
+    <div class="modal-mask" id="inheritorModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeInheritorModal">×</button>
+            <div class="modal-body" id="inheritorModalBody">
+                <!-- 传承人详情内容通过JS动态填充 -->
+            </div>
+        </div>
     </div>
 
     <script>
-        // 1. 替换成你自己的Supabase信息
-        const supabaseUrl = "https://gdyamgzjawtaxgfunfzf.supabase.co";
-        const supabaseAnonKey = "sb_publishable_QQjWgVlFY_WW_rqOtZ-RMg_v3oK0dUi"; // 替换成你复制的Publishable key完整内容
+        // 傩面具完整数据（完全保留未修改）
+        const maskData = [
+            {
+                id: 1,
+                name: "周将军",
+                img: "img/zhoujiangjun.jpg",
+                desc: "周将军是傩戏中最具代表性的武将军面具，是傩堂戏中的正神，主司驱邪护宅、镇守坛场。",
+                feature: "造型威严刚猛，怒目圆睁，獠牙外露，木质雕刻纹理厚重，以红黑为主色调，象征着刚正不阿、勇猛无敌的品格，是民间信仰中守护一方平安的重要神祇。"
+            },
+            {
+                id: 2,
+                name: "钟馗",
+                img: "img/zhongkui.jpg",
+                desc: "钟馗是中国传统文化中的“赐福镇宅圣君”，也是傩舞中最核心的角色之一，主司捉鬼驱邪、纳福迎祥。",
+                feature: "面具以烈焰红为主色调，头顶火焰纹饰，怒目獠牙，气势慑人，是民间最受欢迎的傩面具之一。每逢节庆，百姓都会跳钟馗傩舞，祈求家宅安宁，远离邪祟。"
+            },
+            {
+                id: 3,
+                name: "判神",
+                img: "img/panshen.jpg",
+                desc: "判神又称阴阳判官，是傩戏中掌管人间善恶、断阴阳是非的神祇，融合了道教文化与民间信仰。",
+                feature: "面具采用半黑半金的阴阳造型，头顶“善恶”牌，一眼观阳，一眼察阴，象征着明辨是非、公正无私，是民间对公平正义的精神寄托。"
+            },
+            {
+                id: 4,
+                name: "贵池傩包公",
+                img: "img/baogong.jpg",
+                desc: "贵池傩包公面具源自安徽贵池傩戏，是将历史名臣包拯神化后的傩神形象，主司公正断案、为民伸冤。",
+                feature: "面具半黑半白，月牙官帽，眉眼间既有威严又有悲悯，是贵池傩戏中极具地方特色的经典形象，体现了民间对清官廉吏的推崇与信仰。"
+            },
+            {
+                id: 5,
+                name: "财斯",
+                img: "img/caisi.jpg",
+                desc: "财斯是傩文化中的财神形象，主司招财进宝、财源广进，是民间节庆傩舞中最受欢迎的吉祥角色。",
+                feature: "面具通体鎏金，笑口常开，眉眼舒展，头顶元宝纹饰，两侧搭配铜钱装饰，整体造型喜庆祥和，寄托了百姓对富足生活的美好向往。"
+            },
+            {
+                id: 6,
+                name: "八王",
+                img: "img/bawang.jpg",
+                desc: "八王面具源自川渝、湘黔地区的傩戏，是傩堂戏中的王侯正神，主司镇宅纳福、护佑家族兴旺。",
+                feature: "面具头顶金龙冠，白脸红纹，三眼造型，融合了龙文化与傩文化，雕刻工艺精湛，线条流畅，是傩面具中王侯形象的经典代表。"
+            },
+            {
+                id: 7,
+                name: "含剑吞口",
+                img: "img/tunkou.jpg",
+                desc: "含剑吞口是西南地区傩文化中的镇宅神兽，是民间用于悬挂在门楣上，驱邪避煞、守护家宅的傩面造型。",
+                feature: "面具青铜质感，怒目獠牙，口含宝剑，造型凶猛慑人，是傩文化中“镇宅化煞”功能最具代表性的形象，民间认为其可阻挡一切邪祟入宅。"
+            },
+            {
+                id: 8,
+                name: "布依傩",
+                img: "img/buyi.jpg",
+                desc: "布依傩面具源自贵州布依族傩戏，是布依族民俗文化与傩文化融合的产物，多用于祭祀、祈福、还愿等民俗仪式。",
+                feature: "面具色彩鲜艳，头顶牡丹花卉与凤翼装饰，两侧悬挂铜铃，造型柔美又不失威严，体现了布依族独特的审美与民俗信仰，是少数民族傩文化的珍贵遗存。"
+            },
+            {
+                id: 9,
+                name: "撵路狗",
+                img: "img/nianlugou.jpg",
+                desc: "撵路狗是傩戏中的丑角形象，也是傩堂戏里的“开路神”，负责在祭祀仪式中清场开路，驱散沿途邪祟。",
+                feature: "面具牛头造型，长舌外露，笑容诙谐夸张，是傩面具中少有的喜剧形象。在傩戏表演中，撵路狗的戏份轻松活泼，起到调节仪式氛围的作用。"
+            },
+            {
+                id: 10,
+                name: "嘿公",
+                img: "img/heigong.jpg",
+                desc: "嘿公是广西、云南地区少数民族傩戏中的山神形象，主司守护山林、护佑百姓丰收，是当地民俗信仰中的重要神祇。",
+                feature: "面具色彩绚丽，造型夸张，头顶尖角，纹饰融合了少数民族图腾文化，线条奔放有力，体现了西南少数民族对自然的敬畏与崇拜。"
+            },
+            {
+                id: 11,
+                name: "麻济摩",
+                img: "img/majimo.jpg",
+                desc: "麻济摩是彝族傩戏“撮泰吉”中的核心形象，是彝族祖先崇拜与傩文化融合的产物，象征着祖先的智慧与护佑。",
+                feature: "面具木质雕刻，虎面造型，头顶白羽，风格古朴原始，是现存最古老的傩面具造型之一，承载着彝族千年的历史与民俗记忆，被称为“戏剧的活化石”。"
+            },
+            {
+                id: 12,
+                name: "葛将军",
+                img: "img/gejiangjun.jpg",
+                desc: "葛将军是道教文化与傩文化融合的护法神，是傩堂戏中的四大将军之一，主司驱邪除魔、守护坛场。",
+                feature: "面具虎面造型，怒目圆睁，獠牙外露，线条刚劲有力，以黑、黄、白为主色调，象征着虎虎生威、所向披靡，是傩戏武戏中的经典形象。"
+            },
+            {
+                id: 13,
+                name: "王灵官",
+                img: "img/wanglingguan.jpg",
+                desc: "王灵官是道教第一护法神，也是傩戏中重要的护法形象，主司镇山护法、纠察善恶，是民间信仰中“三眼能观天下事，一鞭惊醒世间人”的神祇。",
+                feature: "面具金属质感，赤面怒目，头盔装饰精美，造型威严庄重，雕刻工艺极为精湛，是傩面具中文武兼备的经典代表，兼具艺术价值与文化价值。"
+            },
+        ];
 
-        // 2. 初始化Supabase客户端
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        // ========== 新增：傩舞服饰数据（可自行替换图片、名称、介绍） ==========
+        const costumeData = [
+            {
+                id: 1,
+                name: "橙红瑞兽纹拖尾华服",
+                tag: "《傩火·逐疫》",
+                img: "img/chenghongruishou-costume.jpg",
+                desc: "橙红瑞兽纹拖尾华服，以火焰般的橙红为主调，满绣傩戏面具纹样",
+                feature: "以橙红为主色调，绣满傩戏面具纹样，如燃烧的火焰，象征驱邪逐疫、守护平安的古老仪式。"
+            },
+            {
+                id: 2,
+                name: "黑金脸谱重工礼服",
+                tag: "《玄面·观心》",
+                img: "img/heijinlianpu-costume.jpg",
+                desc: "黑金脸谱重工礼服，黑底配金红脸谱刺绣，纹样繁复如世间万象",
+                feature: "黑底衬以金红脸谱，繁复纹样如众生百态，暗合“以面观心，洞悉世情”的哲思。"
+            },
+            {
+                id: 3,
+                name: "红黑撞色脸谱长裙",
+                tag: "《赤魇·惊梦》",
+                img: "img/hongheizhuangse-costume.jpg",
+                desc: "红黑撞色脸谱长裙，红黑交织如梦中魅影，搭配灵动流苏，似巫祝踏歌而行，神秘魅惑，氛围感极强。",
+                feature: "红黑交织的脸谱纹样如梦中魅影，流苏摇曳间似有巫祝踏歌，充满神秘张力。"
+            },
+            {
+                id: 4,
+                name: "红白黑巫傩大袖礼袍",
+                tag: "《灵面·祭天》",
+                img: "img/hongbaiheiwu-costume.jpg",
+                desc: "红白黑巫傩大袖礼袍，宽袖舒展如翼，纹样取自巫傩图腾，整体庄重肃穆，还原古祭天礼服的敬畏与神圣。",
+                feature: "宽袖如翼，纹样似巫傩图腾，整体庄重如祭祀礼服，传递与天地神灵对话的敬畏。"
+            },
+            {
+                id: 5,
+                name: "黑金红绿脸谱华服",
+                tag: "《百相·生旦》",
+                img: "img/heijinhonglv-costume.jpg",
+                desc: "黑金红绿脸谱华服，多色脸谱错落排布，如同戏曲生旦净末丑齐聚，以衣绘人间百态，大气又富有故事感。",
+                feature: "多色脸谱错落排布，如戏曲生旦净末丑齐聚，演绎人间万象。"
+            },
+            {
+                id: 6,
+                name: "黑红分体式脸谱礼服",
+                tag: "《魅面·惊鸿》",
+                img: "img/heihongfenti-costume.jpg",
+                desc: "黑红分体式脸谱礼服，露腰剪裁融合现代时尚，重工脸谱刺绣如鬼魅面饰，一现惊鸿，艳而不俗，冷艳凌厉。",
+                feature: "露腰设计兼具现代感与野性，重工脸谱刺绣如鬼魅面饰，惊鸿一瞥间尽显东方诡艳。"
+            },
+           {
+                id: 7,
+                name: "黑橙抽象脸谱大袖袍",
+                tag: "《幻面·迷局》",
+                img: "img/heichengchouxiang-costume.jpg",
+                desc: "黑橙抽象脸谱大袖袍，脸谱纹样抽象化处理，黑橙撞色如混沌与秩序碰撞，充满未知与艺术张力。",
+                feature: "抽象化的脸谱纹样如迷阵，黑橙撞色似混沌与秩序的碰撞，充满未知感。"
+            },
+            {
+                id: 8,
+                name: "黑橙叠层瑞兽纹礼袍",
+                tag: "《镇邪·伏魔》",
+                img: "img/heichengdieceng-costume.jpg",
+                desc: "黑橙叠层瑞兽纹礼袍，自上而下层层瑞兽与脸谱，如守护符印，威严正气，自带震慑感，气场全开。",
+                feature: "自上而下的瑞兽脸谱如层层守护，黑底橙纹如伏魔之印，彰显威严正气。"
+            },
+           {
+                id: 9,
+                name: "绿金红黑复古脸谱袍",
+                tag: "《古傩·遗韵》",
+                img: "img/lvjinhonghei-costume.jpg",
+                desc: "绿金红黑复古脸谱袍，复古配色+古朴纹样，还原古傩文化的厚重质感，致敬非遗传承，低调又有底蕴。",
+                feature: "绿金配色带着复古质感，纹样如古老傩戏的遗存，诉说非遗文化的厚重。"
+            },
+         ];
 
-        // 3. 表单提交逻辑
-        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // 阻止页面刷新
+        // ========== 新增：非遗传承人档案数据（可自行替换图片、信息、介绍） ==========
+        const inheritorData = [
+            {
+                id: 1,
+                name: "刘慎湘",
+                level: "国家级非物质文化遗产传承人",
+                area: "安徽池州 | 贵池傩戏",
+                avatar: "img/liuzhenxiang.jpg",
+                brief: "贵池傩戏国家级非遗传承人，深耕傩戏表演与传承六十余年，完整保留了贵池傩戏的传统唱腔、表演程式与面具制作技艺，被誉为“贵池傩戏活字典”。",
+                desc: "刘慎湘先生自幼跟随父辈学习贵池傩戏，精通傩戏中各类角色的表演技艺，尤其擅长文臣、武将角色的演绎，同时掌握了傩面具雕刻、傩服制作的全套传统工艺。数十年来，他致力于傩戏的传承与推广，整理了数十部濒临失传的傩戏剧本，开办传习所培养了上百名年轻传承人，为贵池傩戏的保护与传承做出了不可磨灭的贡献，是傩文化传承领域的标杆性人物。",
+                achievement: "国家级非物质文化遗产代表性传承人，入选中国非遗年度人物，整理出版《贵池傩戏传统剧目集》，多次代表中国非遗文化赴海外交流展演。"
+            },
+            {
+                id: 2,
+                name: "王国华",
+                level: "国家级非物质文化遗产传承人",
+                area: "江西婺源 | 婺源傩舞",
+                avatar: "img/wangguohua.jpg",
+                brief: "婺源傩舞国家级非遗传承人，完整传承了婺源傩舞的全套表演程式与面具雕刻技艺，是婺源傩舞的核心守艺人。",
+                desc: "王国华先生出身于傩舞世家，自幼学习婺源傩舞，精通傩舞中“开天辟地”“刘海戏金蟾”等经典节目的表演，同时掌握了婺源傩面具的传统雕刻技艺，其雕刻的面具造型古朴、线条刚劲，兼具艺术价值与民俗价值。多年来，他坚持在乡村与校园开展傩舞传习活动，让婺源傩舞这一古老非遗走进大众视野，培养了一大批年轻的傩舞表演者与面具雕刻艺人。",
+                achievement: "国家级非物质文化遗产代表性传承人，江西省非遗保护先进个人，其雕刻的傩面具被中国工艺美术馆收藏，多次参与国家级非遗展演活动。"
+            },
+            {
+                id: 3,
+                name: "杨正华",
+                level: "省级非物质文化遗产传承人",
+                area: "贵州安顺 | 布依族傩戏",
+                avatar: "img/yangzhenghua.jpg",
+                brief: "贵州布依族傩戏省级非遗传承人，深耕布依族傩文化传承四十余年，守护着布依族傩戏、傩面具、傩服制作的完整技艺体系。",
+                desc: "杨正华先生是布依族傩戏的第十九代传承人，自幼跟随祖父学习布依族傩戏表演、面具雕刻与服饰制作技艺，完整保留了布依族傩文化的民族特色与传统技艺。他的作品融合了布依族蜡染、织锦、刺绣非遗技艺，兼具民族特色与艺术美感。多年来，他在当地开办传习所，免费招收少数民族学员，致力于让布依族傩文化代代相传，同时积极推动布依族傩文化的数字化保护与推广。",
+                achievement: "贵州省非物质文化遗产代表性传承人，贵州民族民间工艺大师，其作品多次入选全国少数民族非遗作品展，为西南少数民族傩文化的保护做出了重要贡献。"
+            },
+            {
+                id: 4,
+                name: "罗世云",
+                level: "国家级非物质文化遗产传承人",
+                area: "云南楚雄 | 彝族撮泰吉",
+                avatar: "img/luoshiyun.jpg",
+                brief: "彝族撮泰吉国家级非遗传承人，完整传承了这一“戏剧活化石”的全套表演程式、民俗仪式与服饰制作技艺。",
+                desc: "罗世云先生是彝族撮泰吉的核心传承人，自幼学习这一古老的傩戏形式，精通撮泰吉的祭祀仪式、表演台词、肢体动作与服饰道具制作，完整保留了撮泰吉的原始风貌。数十年来，他致力于撮泰吉的保护与传承，整理了完整的撮泰吉剧本与仪式流程，培养了数十名年轻传承人，让这一濒临失传的古老非遗重焕生机，为研究中国傩文化的起源与发展提供了珍贵的活态资料。",
+                achievement: "国家级非物质文化遗产代表性传承人，入选中国少数民族非遗保护先进个人，多次受邀参与国内外人类学与戏剧学学术交流活动。"
+            },
+            {
+                id: 5,
+                name: "李福国",
+                level: "省级非物质文化遗产传承人",
+                area: "湖南湘西 | 湘西傩堂戏",
+                avatar: "img/lifuguo.jpg",
+                brief: "湘西傩堂戏省级非遗传承人，精通湘西傩堂戏的表演、唱腔、面具雕刻与法事仪式，是湘西北傩文化的代表性传承人。",
+                desc: "李福国先生出身于湘西傩戏世家，从事傩堂戏传承与表演五十余年，精通湘西傩堂戏的二十四戏全套表演程式，同时掌握了傩面具雕刻、傩服制作、傩戏唱腔的全套传统技艺。他的表演风格古朴庄重，兼具民俗性与艺术性，雕刻的傩面具造型夸张、神态生动，是湘西傩面具的代表性作品。多年来，他坚持在湘西乡村开展传习活动，整理了大量濒临失传的傩戏资料，为湘西傩文化的保护与传承做出了重要贡献。",
+                achievement: "湖南省非物质文化遗产代表性传承人，湘西州非遗保护先进个人，其作品被湖南省非遗保护中心收藏，多次参与湖南非遗展演活动。"
+            },
+            {
+                id: 6,
+                name: "张贵祥",
+                level: "省级非物质文化遗产传承人",
+                area: "四川泸州 | 川南傩戏",
+                avatar: "img/zhangguixiang.jpg",
+                brief: "川南傩戏省级非遗传承人，深耕川南傩戏表演与面具雕刻技艺四十余年，融合了川剧艺术与傩文化的特色，形成了独特的艺术风格。",
+                desc: "张贵祥先生自幼学习川剧与傩戏，将川剧的表演程式、唱腔与川南傩戏相结合，丰富了傩戏的艺术表现力。他精通川南傩戏各类角色的表演，同时擅长傩面具雕刻，其作品造型精美、神态丰富，兼具川派艺术的细腻与傩文化的威严。多年来，他致力于傩戏的创新与传承，在校园开展非遗进校园活动，培养了大量年轻传承人，同时创作了多部符合当代审美的傩戏新剧目，让古老的傩文化走进了年轻群体。",
+                achievement: "四川省非物质文化遗产代表性传承人，四川民间工艺大师，其作品多次入选全国工艺美术展，创作的新傩戏剧目获得四川省非遗展演金奖。"
+            },
+        ];
 
-            // 从表单获取用户输入的数据
-            const formData = new FormData(e.target);
-            const submitData = {
-                user_name: formData.get('user_name'),
-                联系方式: formData.get('contact'),
-                feedback_content: formData.get('feedback_content')
-                // created_at 数据库会自动生成，不用手动传
-            };
+        // 动态生成面具卡片（完全保留未修改）
+        const maskGrid = document.getElementById('maskGrid');
+        maskData.forEach(mask => {
+            const card = document.createElement('div');
+            card.className = 'mask-card';
+            card.dataset.maskId = mask.id;
+            card.innerHTML = `
+                <img src="${mask.img}" alt="${mask.name}" class="mask-img">
+                <div class="mask-name">${mask.name}</div>
+            `;
+            maskGrid.appendChild(card);
 
-            // 提交数据到Supabase数据库
-            const { error } = await supabase
-                .from('诺武-赫尔蒂格') // 和你的表名完全一致
-                .insert([submitData]);
+            // 卡片点击事件，打开详情模态框
+            card.addEventListener('click', () => {
+                openMaskModal(mask);
+            });
+        });
 
-            // 处理提交结果
-            if (error) {
-                console.error('提交失败：', error);
-                alert('提交失败，请稍后重试！');
-            } else {
-                alert('提交成功！感谢你的反馈~');
-                e.target.reset(); // 清空表单
+        // 打开面具详情模态框（完全保留未修改）
+        const maskModal = document.getElementById('maskModal');
+        const modalBody = document.getElementById('modalBody');
+        function openMaskModal(mask) {
+            modalBody.innerHTML = `
+                <div class="modal-img-wrap">
+                    <img src="${mask.img}" alt="${mask.name}" class="modal-mask-img">
+                </div>
+                <div class="modal-info">
+                    <h2 class="modal-title">${mask.name}</h2>
+                    <p class="modal-desc">${mask.desc}</p>
+                    <div class="modal-feature">
+                        <div class="feature-title">文化寓意</div>
+                        <p class="modal-desc">${mask.feature}</p>
+                    </div>
+                </div>
+            `;
+            maskModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭面具模态框（完全保留未修改）
+        document.getElementById('closeModal').addEventListener('click', () => {
+            maskModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // 点击面具模态框遮罩关闭（完全保留未修改）
+        maskModal.addEventListener('click', (e) => {
+            if (e.target === maskModal) {
+                maskModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // 开场页进入按钮（完全保留未修改）
+        document.getElementById('enterBtn').addEventListener('click', () => {
+            const splashScreen = document.getElementById('splash-screen');
+            splashScreen.style.opacity = '0';
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+                document.getElementById('main-page').style.display = 'block';
+            }, 800);
+        });
+
+        // ========== 新增：傩舞服饰卡片生成与交互逻辑 ==========
+        const costumeGrid = document.getElementById('costumeGrid');
+        costumeData.forEach(costume => {
+            const card = document.createElement('div');
+            card.className = 'costume-card';
+            card.dataset.costumeId = costume.id;
+            card.innerHTML = `
+                <img src="${costume.img}" alt="${costume.name}" class="costume-img">
+                <div class="costume-name">${costume.name}</div>
+                <div class="costume-tag">${costume.tag}</div>
+            `;
+            costumeGrid.appendChild(card);
+
+            // 卡片点击事件，打开服饰详情模态框
+            card.addEventListener('click', () => {
+                openCostumeModal(costume);
+            });
+        });
+
+        // 打开服饰详情模态框
+        const costumeModal = document.getElementById('costumeModal');
+        const costumeModalBody = document.getElementById('costumeModalBody');
+        function openCostumeModal(costume) {
+            costumeModalBody.innerHTML = `
+                <div class="modal-img-wrap">
+                    <img src="${costume.img}" alt="${costume.name}" class="modal-mask-img">
+                </div>
+                <div class="modal-info">
+                    <h2 class="modal-title">${costume.name}</h2>
+                    <p class="modal-desc" style="color: var(--warm-sand-gold); font-weight: 500;">${costume.tag}</p>
+                    <p class="modal-desc">${costume.desc}</p>
+                    <div class="modal-feature">
+                        <div class="feature-title">服饰特色与文化寓意</div>
+                        <p class="modal-desc">${costume.feature}</p>
+                    </div>
+                </div>
+            `;
+            costumeModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭服饰模态框
+        document.getElementById('closeCostumeModal').addEventListener('click', () => {
+            costumeModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // 点击服饰模态框遮罩关闭
+        costumeModal.addEventListener('click', (e) => {
+            if (e.target === costumeModal) {
+                costumeModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // ========== 新增：传承人档案卡片生成与交互逻辑 ==========
+        const inheritorGrid = document.getElementById('inheritorGrid');
+        inheritorData.forEach(inheritor => {
+            const card = document.createElement('div');
+            card.className = 'inheritor-card';
+            card.dataset.inheritorId = inheritor.id;
+            card.innerHTML = `
+                <img src="${inheritor.avatar}" alt="${inheritor.name}" class="inheritor-avatar">
+                <div class="inheritor-info">
+                    <h3 class="inheritor-name">${inheritor.name}</h3>
+                    <p class="inheritor-level">${inheritor.level}</p>
+                    <p class="inheritor-area">传承地域：${inheritor.area}</p>
+                    <p class="inheritor-brief">${inheritor.brief}</p>
+                </div>
+            `;
+            inheritorGrid.appendChild(card);
+
+            // 卡片点击事件，打开传承人详情模态框
+            card.addEventListener('click', () => {
+                openInheritorModal(inheritor);
+            });
+        });
+
+        // 打开传承人详情模态框
+        const inheritorModal = document.getElementById('inheritorModal');
+        const inheritorModalBody = document.getElementById('inheritorModalBody');
+        function openInheritorModal(inheritor) {
+            inheritorModalBody.innerHTML = `
+                <div class="modal-img-wrap">
+                    <img src="${inheritor.avatar}" alt="${inheritor.name}" class="modal-mask-img">
+                </div>
+                <div class="modal-info">
+                    <h2 class="modal-title">${inheritor.name}</h2>
+                    <p class="modal-desc" style="color: var(--warm-sand-gold); font-weight: 500;">${inheritor.level}</p>
+                    <p class="modal-desc"><strong>传承地域：</strong>${inheritor.area}</p>
+                    <p class="modal-desc">${inheritor.desc}</p>
+                    <div class="modal-feature">
+                        <div class="feature-title">传承成就</div>
+                        <p class="modal-desc">${inheritor.achievement}</p>
+                    </div>
+                </div>
+            `;
+            inheritorModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭传承人模态框
+        document.getElementById('closeInheritorModal').addEventListener('click', () => {
+            inheritorModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // 点击传承人模态框遮罩关闭
+        inheritorModal.addEventListener('click', (e) => {
+            if (e.target === inheritorModal) {
+                inheritorModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             }
         });
     </script>
