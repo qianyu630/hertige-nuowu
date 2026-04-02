@@ -97,15 +97,18 @@
             box-shadow: 0 0 30px rgba(230, 192, 136, 0.6);
         }
 
-        /* ------------ 主页面布局 ------------ */
-        background: linear-gradient(180deg, rgba(61, 26, 16, 0.9), rgba(136, 58, 36, 0.85), rgba(107, 53, 32, 0.9)),
-    url("https://hertige-nuowu.oss-cn-hangzhou.aliyuncs.com/background.jpg");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-attachment: fixed;
-  /* ----------------------------------------------------------------- */
-        padding-bottom: 4rem;
+        /* ------------ 主页面布局（已修复语法错误，仅修改背景） ------------ */
+        #main-page {
+            display: none;
+            min-height: 100vh;
+            /* 主页面背景图设置，叠加原有棕色调遮罩，保证文字可读性 */
+            background: linear-gradient(180deg, rgba(61, 26, 16, 0.9), rgba(136, 58, 36, 0.85), rgba(107, 53, 32, 0.9)),
+            url("https://hertige-nuowu.oss-cn-hangzhou.aliyuncs.com/splash-bg.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            padding-bottom: 4rem;
         }
 
         /* 导航栏（新增2个板块导航项） */
@@ -816,7 +819,7 @@
             },
          ];
 
-        // ========== 新增：非遗传承人档案数据（可自行替换图片、信息、介绍） ==========
+        // ========== 新增：非遗传承人档案数据（可自行替换图片、名称、介绍） ==========
         const inheritorData = [
             {
                 id: 1,
