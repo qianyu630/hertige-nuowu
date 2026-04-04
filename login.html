@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录/注册 - 傩舞非遗面具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "思源宋体", "Microsoft YaHei", serif;
+        }
+        :root {
+            --coconut-main: #883A24;
+            --coconut-deep: #5C2818;
+            --coconut-dark: #3D1A10;
+            --coconut-light: #A05236;
+            --warm-sand-gold: #E6C088;
+            --soft-cream: #F8F0E3;
+            --deep-brown-bg: #2D140B;
+        }
+        body {
+            background: linear-gradient(180deg, rgba(61, 26, 16, 0.9), rgba(136, 58, 36, 0.85), rgba(107, 53, 32, 0.9)),
+            url("https://hertige-nuowu.oss-cn-hangzhou.aliyuncs.com/splash-bg.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--soft-cream);
+            min-height: 100vh;
+        }
+        header {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(230, 192, 136, 0.3);
+            background: rgba(45, 20, 11, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 1.8rem;
+            color: var(--warm-sand-gold);
+            font-weight: bold;
+            letter-spacing: 0.2rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            color: var(--soft-cream);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: var(--warm-sand-gold);
+        }
+        .login-container {
+            max-width: 500px;
+            margin: 6rem auto;
+            padding: 3rem;
+            background: rgba(92, 40, 24, 0.7);
+            border: 2px solid var(--warm-sand-gold);
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+        }
+        .tab-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background: transparent;
+            border: 1px solid var(--warm-sand-gold);
+            color: var(--soft-cream);
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .tab.active {
+            background: var(--warm-sand-gold);
+            color: var(--coconut-dark);
+        }
+        .form-item {
+            margin-bottom: 1.5rem;
+        }
+        .form-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--warm-sand-gold);
+            font-size: 1rem;
+        }
+        .form-item input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(61, 26, 16, 0.6);
+            border: 1px solid var(--warm-sand-gold);
+            border-radius: 8px;
+            color: var(--soft-cream);
+            font-size: 1rem;
+            outline: none;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--coconut-deep), var(--coconut-dark));
+            border: 2px solid var(--warm-sand-gold);
+            color: var(--warm-sand-gold);
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .submit-btn:hover {
+            background: var(--warm-sand-gold);
+            color: var(--coconut-dark);
+        }
+        .tip {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--soft-cream);
+            opacity: 0.8;
+        }
+        .form-box {
+            display: none;
+        }
+        .form-box.active {
+            display: block;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 5%;
+            border-top: 1px solid rgba(230, 192, 136, 0.3);
+            color: rgba(248, 240, 227, 0.7);
+        }
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 3rem 1rem;
+                padding: 2rem 1.5rem;
+            }
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">傩舞文化</div>
+        <div class="nav-links">
+            <a href="index.html#intro">文化介绍</a>
+            <a href="index.html#mask-grid">面具图鉴</a>
+            <a href="index.html#costume">傩舞服饰</a>
+            <a href="index.html#inheritor">传承人档案</a>
+            <a href="diy.html">DIY设计</a>
+            <a href="login.html" id="userCenter">登录/注册</a>
+            <a href="feedback.html">留言反馈</a>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <div class="tab-group">
+            <button class="tab active" data-target="loginForm">登录</button>
+            <button class="tab" data-target="registerForm">注册</button>
+        </div>
+
+        <!-- 登录表单 -->
+        <div class="form-box active" id="loginForm">
+            <div class="form-item">
+                <label>用户名</label>
+                <input type="text" id="loginUser" placeholder="请输入用户名">
+            </div>
+            <div class="form-item">
+                <label>密码</label>
+                <input type="password" id="loginPwd" placeholder="请输入密码">
+            </div>
+            <button class="submit-btn" onclick="userLogin()">登录</button>
+            <p class="tip">登录后即可使用DIY设计、作品下载功能</p>
+        </div>
+
+        <!-- 注册表单 -->
+        <div class="form-box" id="registerForm">
+            <div class="form-item">
+                <label>用户名</label>
+                <input type="text" id="regUser" placeholder="请设置用户名">
+            </div>
+            <div class="form-item">
+                <label>密码</label>
+                <input type="password" id="regPwd" placeholder="请设置密码">
+            </div>
+            <button class="submit-btn" onclick="userRegister()">注册</button>
+            <p class="tip">注册成功后自动登录</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 傩舞非遗文化传承 | 中国非物质文化遗产保护项目</p>
+    </footer>
+
+    <script>
+        // 标签切换
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.form-box').forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.target).classList.add('active');
+            });
+        });
+
+        // 注册
+        function userRegister() {
+            const username = document.getElementById('regUser').value.trim();
+            const password = document.getElementById('regPwd').value.trim();
+            if (!username || !password) {
+                alert('请填写完整信息！');
+                return;
+            }
+            const user = { username, password };
+            localStorage.setItem('nuowu_user', JSON.stringify(user));
+            alert('注册成功！即将跳转到DIY设计页');
+            window.location.href = 'diy.html';
+        }
+
+        // 登录
+        function userLogin() {
+            const username = document.getElementById('loginUser').value.trim();
+            const password = document.getElementById('loginPwd').value.trim();
+            const user = JSON.parse(localStorage.getItem('nuowu_user'));
+            if (!user) {
+                alert('用户不存在，请先注册！');
+                return;
+            }
+            if (user.username === username && user.password === password) {
+                alert('登录成功！');
+                window.location.href = 'diy.html';
+            } else {
+                alert('用户名或密码错误！');
+            }
+        }
+
+        // 登录状态
+        function checkLoginStatus() {
+            const user = JSON.parse(localStorage.getItem('nuowu_user'));
+            const userNav = document.getElementById('userCenter');
+            if (user) {
+                userNav.innerText = `${user.username}｜个人中心`;
+                userNav.href = 'works.html';
+            }
+        }
+        window.addEventListener('load', checkLoginStatus);
+    </script>
+</body>
+</html>
