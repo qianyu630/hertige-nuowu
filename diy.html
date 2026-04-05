@@ -365,16 +365,17 @@
 
     <script>
         // ========== 登录校验（和works.html保持一致） ==========
-        window.addEventListener('load', () => {
-            const user = JSON.parse(localStorage.getItem('nuowu_user'));
-            if (!user) {
-                alert('请先登录后再进行DIY创作！');
-                window.location.href = 'login.html';
-                return;
-            }
-            initCanvas();
-            bindEvents();
-        });
+       // 页面加载：云端登录校验
+window.addEventListener('load', async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        alert('请先登录后再进行DIY创作！');
+        window.location.href = 'login.html';
+        return;
+    }
+    initCanvas();
+    bindEvents();
+});
 
         // ========== 核心画布功能 ==========
         const canvas = document.getElementById('canvas');
@@ -522,32 +523,46 @@
         }
 
         // ========== 作品保存（关联用户，同步到works.html） ==========
-        function saveCanvasAsImage() {
-            const user = JSON.parse(localStorage.getItem('nuowu_user'));
-            if (!user) return;
+ // 作品云端保存（绑定当前登录用户，跨设备同步）
+async function saveCanvasAsImage() {
+    // 校验云端登录状态
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        alert('请先登录后再保存作品！');
+        window.location.href = 'login.html';
+        return;
+    }
 
-            // 生成作品信息
-            const workData = {
-                username: user.username,
-                img: canvas.toDataURL('image/png'),
-                time: new Date().toLocaleString('zh-CN'),
-                id: Date.now()
-            };
+    // 生成作品基础信息
+    const workImg = canvas.toDataURL('image/png');
+    const workId = Date.now();
+    const username = user.user_metadata?.username || user.email.split('@')[0];
 
-            // 读取现有作品并追加新作品
-            const allWorks = JSON.parse(localStorage.getItem('nuowu_works')) || [];
-            allWorks.push(workData);
-            localStorage.setItem('nuowu_works', JSON.stringify(allWorks));
+    // 提交作品到Supabase云端数据库
+    const { error } = await supabase
+        .from('nuowu_user_works')
+        .insert([
+            {
+                user_id: user.id, // 绑定用户ID，实现账号和作品关联
+                username: username,
+                work_img: workImg,
+                work_id: workId
+            }
+        ]);
 
-            // 下载图片+提示
-            const link = document.createElement('a');
-            link.download = `傩舞DIY作品_${new Date().getTime()}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            
-            alert('作品保存成功！可在「个人中心/作品展示」查看');
-        }
-
+    // 处理结果
+    if (error) {
+        console.error('作品保存失败：', error);
+        alert('作品保存失败，请稍后重试！');
+    } else {
+        // 同时保留本地下载功能
+        const link = document.createElement('a');
+        link.download = `傩舞DIY作品_${workId}.png`;
+        link.href = workImg;
+        link.click();
+        alert('作品保存成功！可在「个人中心」查看，换设备登录同一账号即可同步');
+    }
+}
         // ========== 上传自定义模板 ==========
         function handleUpload(e) {
             const file = e.target.files[0];
