@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<!-- 引入Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// 替换成你自己的Supabase信息
-const supabaseUrl = "https://mnphcyatykxezowdsynh.supabase.co";
-const supabaseAnonKey = "sb_publishable_DVyxaOkUi0mieAzVh7bk_A_AhUY3QJm";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>傩舞非遗面具 - 千年傩韵 面具传魂</title>
@@ -615,42 +607,19 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 <script>
 // 登录状态同步
-// 云端登录状态同步（跨设备生效）
-async function checkLoginStatus() {
-    const { data: { user } } = await supabase.auth.getUser();
+function checkLoginStatus() {
+    const user = JSON.parse(localStorage.getItem('nuowu_user') || 'null');
     const userNav = document.getElementById('userCenter');
     if (user) {
-        // 取用户昵称
-        const username = user.user_metadata?.username || user.email.split('@')[0];
-        userNav.innerText = `${username}｜个人中心`;
+        userNav.innerText = `${user.username}｜个人中心`;
         userNav.href = 'works.html';
-        // 新增退出登录按钮
-        if (!document.getElementById('logoutBtn')) {
-            const logoutBtn = document.createElement('a');
-            logoutBtn.id = 'logoutBtn';
-            logoutBtn.href = 'javascript:;';
-            logoutBtn.innerText = '退出登录';
-            logoutBtn.onclick = doLogout;
-            document.querySelector('.nav-links').appendChild(logoutBtn);
-        }
     } else {
         userNav.innerText = '登录/注册';
         userNav.href = 'login.html';
-        document.getElementById('logoutBtn')?.remove();
     }
 }
-
-// 退出登录功能
-async function doLogout() {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-        alert('已退出登录');
-        window.location.reload();
-    }
-}
-
-// 页面加载时执行
 window.addEventListener('load', checkLoginStatus);
+
 // 面具数据
 const maskData = [
     {
