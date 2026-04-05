@@ -1,6 +1,15 @@
-<!DOCTYPE html>
+、<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<!-- 引入Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// 替换成你自己的Supabase信息，和留言页完全一致
+const supabaseUrl = "https://mnphcyatykxezowdsynh.supabase.co";
+const supabaseAnonKey = "sb_publishable_DVyxaOkUi0mieAzVh7bk_A_AhUY3QJm";
+// 初始化Supabase客户端
+const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录/注册 - 傩舞非遗面具</title>
